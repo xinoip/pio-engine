@@ -44,6 +44,16 @@ public:
         return static_cast<T *>(componentTypeMap[&typeid(T)]);
     }
 
+    template <typename T>
+    bool hasComponent()
+    {
+        if (componentTypeMap[&typeid(T)] != nullptr)
+        {
+            return true;
+        }
+        return false;
+    }
+
     void printComponents();
 };
 
