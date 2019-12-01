@@ -3,6 +3,10 @@
 #include "Game.h"
 #include "Constants.h"
 #include "../lib/glm/glm.hpp"
+#include "Components/TransformComponent.h"
+
+EntityManager manager;
+SDL_Renderer *Game::renderer;
 
 Game::Game()
 {
@@ -17,9 +21,6 @@ bool Game::isRunning() const
 {
     return m_isRunning;
 }
-
-glm::vec2 projectilePos = glm::vec2(0.0f, 0.0f);
-glm::vec2 projectileVel = glm::vec2(20.0f, 20.0f);
 
 void Game::initialize(unsigned int width, unsigned int height)
 {
@@ -49,8 +50,17 @@ void Game::initialize(unsigned int width, unsigned int height)
         return;
     }
 
+    loadLevel(0);
+
     m_isRunning = true;
     return;
+}
+
+void Game::loadLevel(int levelNumber)
+{
+    // add entities and components
+    Entity &newEntity(manager.addEntity("projectile"));
+    newEntity.addComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
 }
 
 void Game::processInput()
@@ -86,9 +96,7 @@ void Game::update()
 
     ticksLastFrame = SDL_GetTicks();
 
-    projectilePos = glm::vec2(
-        projectilePos.x + projectileVel.x * deltaTime,
-        projectilePos.y + projectileVel.y * deltaTime);
+    manager.update(deltaTime);
 }
 
 void Game::render()
@@ -96,14 +104,12 @@ void Game::render()
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
 
-    SDL_Rect projectile{
-        (int)projectilePos.x,
-        (int)projectilePos.y,
-        10,
-        10};
+    if (manager.hasNoEntities())
+    {
+        return;
+    }
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &projectile);
+    manager.render();
 
     SDL_RenderPresent(renderer);
 }
