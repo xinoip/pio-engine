@@ -61,6 +61,12 @@ void Game::loadLevel(int levelNumber)
     // add entities and components
     Entity &newEntity(manager.addEntity("projectile"));
     newEntity.addComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+    Entity &newEntity1(manager.addEntity("projectile"));
+    newEntity1.addComponent<TransformComponent>(800, 600, -20, -20, 32, 32, 1);
+    Entity &newEntity2(manager.addEntity("projectile"));
+    newEntity2.addComponent<TransformComponent>(300, 200, 10, 10, 32, 32, 1);
+
+    manager.printEntities();
 }
 
 void Game::processInput()

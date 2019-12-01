@@ -21,6 +21,8 @@ public:
     std::vector<Entity*> getEntities() const;
     unsigned int getEntityCount();
     void clearData();
+
+    void printEntities();
 };
 
 #endif

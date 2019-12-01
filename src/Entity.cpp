@@ -35,3 +35,11 @@ bool Entity::isActive() const
 {
     return m_isActive;
 }
+
+void Entity::printComponents()
+{
+    for (auto &component : components)
+    {
+        component->print();
+    }
+}

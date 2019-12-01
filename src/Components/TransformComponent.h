@@ -35,8 +35,8 @@ public:
     void render() override
     {
         SDL_Rect transformRectangle = {
-            (int) position.x,
-            (int) position.y,
+            (int)position.x,
+            (int)position.y,
             width,
             height,
         };
@@ -44,6 +44,10 @@ public:
         SDL_RenderFillRect(Game::renderer, &transformRectangle);
     }
 
+    void print()
+    {
+        std::cout << "\tComponent<TransformComponent>" << std::endl;
+    }
 };
 
 #endif

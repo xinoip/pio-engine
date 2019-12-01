@@ -34,6 +34,8 @@ public:
         newComponent->initialize();
         return *newComponent;
     }
+
+    void printComponents();
 };
 
 #endif

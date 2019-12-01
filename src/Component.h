@@ -13,6 +13,7 @@ public:
     virtual void initialize() {}
     virtual void update(float deltaTime) {}
     virtual void render() {}
+    virtual void print() {}
 };
 
 #endif
