@@ -5,6 +5,9 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "EntityManager.h"
+#include "AssetManager.h"
+
+class AssetManager;
 
 class Game
 {
@@ -14,6 +17,7 @@ private:
     int ticksLastFrame;
 public:
     static SDL_Renderer *renderer;
+    static AssetManager *assetManager;
     Game();
     ~Game();
     bool isRunning() const;
