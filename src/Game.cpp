@@ -5,10 +5,12 @@
 #include "../lib/glm/glm.hpp"
 #include "Components/TransformComponent.h"
 #include "Components/SpriteComponent.h"
+#include "Components/KeyboardControlComponent.h"
 
 EntityManager manager;
 AssetManager *Game::assetManager = new AssetManager(&manager);
 SDL_Renderer *Game::renderer;
+SDL_Event Game::event;
 
 Game::Game()
 {
@@ -67,13 +69,14 @@ void Game::loadLevel(int levelNumber)
     assetManager->addTexture("radar-image", (imageFilePath + "radar.png").c_str());
 
     // add entities and components
-    Entity &tankEntity(manager.addEntity("tank"));
-    tankEntity.addComponent<TransformComponent>(350, 200, 10, 10, 32, 32, 1);
-    tankEntity.addComponent<SpriteComponent>("tank-image");
-
     Entity &chopperEntity(manager.addEntity("chopper"));
     chopperEntity.addComponent<TransformComponent>(350, 200, 0, -10, 32, 32, 1);
     chopperEntity.addComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
+    chopperEntity.addComponent<KeyboardControlComponent>("up", "right", "down", "left");
+
+    Entity &tankEntity(manager.addEntity("tank"));
+    tankEntity.addComponent<TransformComponent>(350, 200, 10, 10, 32, 32, 1);
+    tankEntity.addComponent<SpriteComponent>("tank-image");
 
     Entity &radarEntity(manager.addEntity("radar"));
     radarEntity.addComponent<TransformComponent>(400, 300, 0, 0, 64, 64, 1);
@@ -84,7 +87,6 @@ void Game::loadLevel(int levelNumber)
 
 void Game::processInput()
 {
-    SDL_Event event;
     SDL_PollEvent(&event);
     switch (event.type)
     {
