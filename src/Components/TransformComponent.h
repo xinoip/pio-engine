@@ -36,7 +36,7 @@ public:
     {
     }
 
-    void print()
+    void print() override
     {
         std::cout << "\tComponent<TransformComponent>" << std::endl;
     }

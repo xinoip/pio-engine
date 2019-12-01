@@ -55,6 +55,11 @@ public:
     {
         TextureManager::draw(texture, srcRectangle, destRectangle, spriteFlip);
     }
+
+    void print() override
+    {
+        std::cout << "\tComponent<SpriteComponent>" << std::endl;
+    }
 };
 
 #endif
