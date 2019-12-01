@@ -71,8 +71,9 @@ void Game::loadLevel(int levelNumber)
     tankEntity.addComponent<SpriteComponent>("tank-image");
 
     Entity &chopperEntity(manager.addEntity("chopper"));
-    chopperEntity.addComponent<TransformComponent>(350, 200, -10, -10, 32, 32, 1);
-    chopperEntity.addComponent<SpriteComponent>("chopper-image");
+    chopperEntity.addComponent<TransformComponent>(350, 200, 0, -10, 32, 32, 1);
+    chopperEntity.addComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
+    // chopperEntity.addComponent<SpriteComponent>("chopper-image");
 
     manager.printEntities();
 }
