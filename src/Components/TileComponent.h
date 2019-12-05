@@ -52,7 +52,7 @@ public:
 
     void print() override
     {
-        std::cout << "\tComponent<TileComponent>" << std::endl;
+        // std::cout << "\tComponent<TileComponent>" << std::endl;
     }
 };
 

@@ -1,6 +1,8 @@
 #include "EntityManager.h"
 
 #include <iostream>
+#include "Collision.h"
+#include "Components/ColliderComponent.h"
 
 void EntityManager::clearData()
 {
@@ -60,7 +62,7 @@ std::vector<Entity *> EntityManager::getEntitiesByLayer(LayerType layer) const
             rtr.emplace_back(entity);
         }
     }
-    
+
     return rtr;
 }
 
@@ -73,9 +75,33 @@ void EntityManager::printEntities()
 {
     for (auto &entity : entities)
     {
-        std::cout << "Entity name: ";
-        std::cout << entity->name << std::endl;
-        entity->printComponents();
-        std::cout << std::endl;
+        if (entity->name != "Tile")
+        {
+            std::cout << "Entity name: ";
+            std::cout << entity->name << std::endl;
+            entity->printComponents();
+            std::cout << std::endl;
+        }
     }
+}
+
+std::string EntityManager::checkEntityCollisions(Entity &entity) const
+{
+    ColliderComponent *collider = entity.getComponent<ColliderComponent>();
+    for (auto &e : entities)
+    {
+        if (e->name.compare(entity.name) != 0)
+        {
+            if (e->hasComponent<ColliderComponent>())
+            {
+                ColliderComponent *otherCollider = e->getComponent<ColliderComponent>();
+                if (Collision::checkRectCollision(collider->collider, otherCollider->collider))
+                {
+                    return otherCollider->colliderTag;
+                }
+            }
+        }
+    }
+
+    return std::string();
 }

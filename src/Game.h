@@ -30,6 +30,7 @@ public:
     void destroy();
     void loadLevel(int levelNumber);
     void handleCameraMovement();
+    void checkCollisions();
 };
 
 #endif

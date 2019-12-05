@@ -6,6 +6,7 @@
 #include "Components/TransformComponent.h"
 #include "Components/SpriteComponent.h"
 #include "Components/KeyboardControlComponent.h"
+#include "Components/ColliderComponent.h"
 #include "Map.h"
 
 EntityManager manager;
@@ -79,13 +80,15 @@ void Game::loadLevel(int levelNumber)
     map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
 
     // add entities and components
-    chopperEntity.addComponent<TransformComponent>(350, 200, 0, -10, 32, 32, 1);
+    chopperEntity.addComponent<TransformComponent>(400, 300, 0, -10, 32, 32, 1);
     chopperEntity.addComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
     chopperEntity.addComponent<KeyboardControlComponent>("up", "right", "down", "left");
+    chopperEntity.addComponent<ColliderComponent>("player", 400, 300, 32, 32);
 
     Entity &tankEntity(manager.addEntity("tank", ENEMY_LAYER));
     tankEntity.addComponent<TransformComponent>(350, 200, 10, 10, 32, 32, 1);
     tankEntity.addComponent<SpriteComponent>("tank-image");
+    tankEntity.addComponent<ColliderComponent>("enemy", 350, 200, 32, 32);
 
     Entity &radarEntity(manager.addEntity("radar", UI_LAYER));
     radarEntity.addComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
@@ -128,6 +131,8 @@ void Game::update()
     manager.update(deltaTime);
 
     handleCameraMovement();
+
+    checkCollisions();
 }
 
 void Game::render()
@@ -154,15 +159,26 @@ void Game::destroy()
 
 void Game::handleCameraMovement()
 {
-    TransformComponent* playerTransform = chopperEntity.getComponent<TransformComponent>();
+    TransformComponent *playerTransform = chopperEntity.getComponent<TransformComponent>();
     camera.x = playerTransform->position.x - (WINDOW_WIDTH / 2);
     camera.y = playerTransform->position.y - (WINDOW_HEIGHT / 2);
 
     // clamp
-    if(camera.x < 0) camera.x = 0;
-    if(camera.y < 0) camera.y = 0;
-    if(camera.x > camera.w) camera.x = camera.w;
-    if(camera.y > camera.h) camera.y = camera.h;
+    if (camera.x < 0)
+        camera.x = 0;
+    if (camera.y < 0)
+        camera.y = 0;
+    if (camera.x > camera.w)
+        camera.x = camera.w;
+    if (camera.y > camera.h)
+        camera.y = camera.h;
+}
 
-    std::cout << camera.x << " , " << camera.y << std::endl;
+void Game::checkCollisions()
+{
+    std::string collisionTagType = manager.checkEntityCollisions(chopperEntity);
+    if (collisionTagType == "enemy")
+    {
+        m_isRunning = false;
+    }
 }

@@ -11,17 +11,19 @@ class Entity;
 class EntityManager
 {
 private:
-    std::vector<Entity*> entities;
+    std::vector<Entity *> entities;
+
 public:
     void update(float deltaTime);
     void render();
     void destroy();
     bool hasNoEntities() const;
-    Entity& addEntity(std::string entityName, LayerType layer);
-    std::vector<Entity*> getEntities() const;
-    std::vector<Entity*> getEntitiesByLayer(LayerType layer) const;
+    Entity &addEntity(std::string entityName, LayerType layer);
+    std::vector<Entity *> getEntities() const;
+    std::vector<Entity *> getEntitiesByLayer(LayerType layer) const;
     unsigned int getEntityCount();
     void clearData();
+    std::string checkEntityCollisions(Entity &entity) const;
 
     void printEntities();
 };
