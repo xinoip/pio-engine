@@ -74,6 +74,7 @@ void Game::loadLevel(int levelNumber)
     assetManager->addTexture("tank-image", (imageFilePath + "tank-big-right.png").c_str());
     assetManager->addTexture("chopper-image", (imageFilePath + "chopper-spritesheet.png").c_str());
     assetManager->addTexture("radar-image", (imageFilePath + "radar.png").c_str());
+    assetManager->addTexture("hitbox-image", (imageFilePath + "collision-texture.png").c_str());
     assetManager->addTexture("jungle-map", (tileFilePath + "jungle.png").c_str());
 
     map = new Map("jungle-map", 2, 32);

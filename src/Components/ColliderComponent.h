@@ -5,7 +5,9 @@
 #include <string>
 #include "../Game.h"
 #include "../Component.h"
+#include "../Constants.h"
 #include "TransformComponent.h"
+#include "SpriteComponent.h"
 
 class ColliderComponent : public Component
 {
@@ -29,10 +31,14 @@ public:
             transform = owner->getComponent<TransformComponent>();
             srcRect = {0, 0, transform->width, transform->height};
             destRect = {collider.x, collider.y, collider.w, collider.h};
+            if (SHOW_HITBOX)
+            {
+                this->owner->addComponent<SpriteComponent>("hitbox-image");
+            }
         }
         else
         {
-            std::cout << "No transformComp found in collider!" << std::endl;    
+            std::cout << "No transformComp found in collider!" << std::endl;
         }
     }
 

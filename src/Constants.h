@@ -18,4 +18,6 @@ enum LayerType {
 
 const unsigned int NUM_LAYERS = 6;
 
+const bool SHOW_HITBOX = true;
+
 #endif
