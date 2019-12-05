@@ -1,6 +1,7 @@
 #ifndef _Entity_h_
 #define _Entity_h_
 
+#include "Constants.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -20,8 +21,9 @@ private:
 
 public:
     std::string name;
+    LayerType layer;
     Entity(EntityManager &manager);
-    Entity(EntityManager &manager, std::string name);
+    Entity(EntityManager &manager, std::string name, LayerType layer);
     void update(float deltaTime);
     void render();
     void destroy();

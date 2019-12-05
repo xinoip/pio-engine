@@ -52,6 +52,7 @@ public:
 
     void update(float deltaTime) override
     {
+        const int velChange = 500;
         if (Game::event.type == SDL_KEYDOWN)
         {
             std::string keyCode = std::to_string(Game::event.key.keysym.sym);
@@ -59,24 +60,24 @@ public:
             if (keyCode.compare(upKey) == 0)
             {
                 transform->velocity.x = 0;
-                transform->velocity.y = -10;
+                transform->velocity.y = -velChange;
                 sprite->play("UpAnimation");
             }
             if (keyCode.compare(rightKey) == 0)
             {
-                transform->velocity.x = 10;
+                transform->velocity.x = velChange;
                 transform->velocity.y = 0;
                 sprite->play("RightAnimation");
             }
             if (keyCode.compare(downKey) == 0)
             {
                 transform->velocity.x = 0;
-                transform->velocity.y = 10;
+                transform->velocity.y = velChange;
                 sprite->play("DownAnimation");
             }
             if (keyCode.compare(leftKey) == 0)
             {
-                transform->velocity.x = -10;
+                transform->velocity.x = -velChange;
                 transform->velocity.y = 0;
                 sprite->play("LeftAnimation");
             }

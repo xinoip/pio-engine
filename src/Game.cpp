@@ -72,20 +72,20 @@ void Game::loadLevel(int levelNumber)
     assetManager->addTexture("radar-image", (imageFilePath + "radar.png").c_str());
     assetManager->addTexture("jungle-map", (tileFilePath + "jungle.png").c_str());
 
-    map = new Map("jungle-map", 2, 32);
+    map = new Map("jungle-map", 1, 32);
     map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
 
     // add entities and components
-    Entity &chopperEntity(manager.addEntity("chopper"));
+    Entity &chopperEntity(manager.addEntity("chopper", PLAYER_LAYER));
     chopperEntity.addComponent<TransformComponent>(350, 200, 0, -10, 32, 32, 1);
     chopperEntity.addComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
     chopperEntity.addComponent<KeyboardControlComponent>("up", "right", "down", "left");
 
-    Entity &tankEntity(manager.addEntity("tank"));
+    Entity &tankEntity(manager.addEntity("tank", ENEMY_LAYER));
     tankEntity.addComponent<TransformComponent>(350, 200, 10, 10, 32, 32, 1);
     tankEntity.addComponent<SpriteComponent>("tank-image");
 
-    Entity &radarEntity(manager.addEntity("radar"));
+    Entity &radarEntity(manager.addEntity("radar", UI_LAYER));
     radarEntity.addComponent<TransformComponent>(400, 300, 0, 0, 64, 64, 1);
     radarEntity.addComponent<SpriteComponent>("radar-image", 8, 160, false, true);
 

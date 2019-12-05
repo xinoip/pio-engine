@@ -25,9 +25,12 @@ void EntityManager::update(float deltaTime)
 
 void EntityManager::render()
 {
-    for (auto &entity : entities)
+    for (int layerNumber = 0; layerNumber < NUM_LAYERS; layerNumber++)
     {
-        entity->render();
+        for (auto &entity : getEntitiesByLayer(static_cast<LayerType>(layerNumber)))
+        {
+            entity->render();
+        }
     }
 }
 
@@ -35,10 +38,9 @@ void EntityManager::destroy()
 {
 }
 
-Entity &EntityManager::addEntity(std::string entityName)
+Entity &EntityManager::addEntity(std::string entityName, LayerType layer)
 {
-    Entity *entity = new Entity(*this, entityName);
-    // entities.push_back(entity);
+    Entity *entity = new Entity(*this, entityName, layer);
     entities.emplace_back(entity);
     return *entity;
 }
@@ -46,6 +48,20 @@ Entity &EntityManager::addEntity(std::string entityName)
 std::vector<Entity *> EntityManager::getEntities() const
 {
     return entities;
+}
+
+std::vector<Entity *> EntityManager::getEntitiesByLayer(LayerType layer) const
+{
+    std::vector<Entity *> rtr;
+    for (auto &entity : entities)
+    {
+        if (entity->layer == layer)
+        {
+            rtr.emplace_back(entity);
+        }
+    }
+    
+    return rtr;
 }
 
 unsigned int EntityManager::getEntityCount()

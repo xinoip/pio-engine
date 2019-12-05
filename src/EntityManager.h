@@ -17,8 +17,9 @@ public:
     void render();
     void destroy();
     bool hasNoEntities() const;
-    Entity& addEntity(std::string entityName);
+    Entity& addEntity(std::string entityName, LayerType layer);
     std::vector<Entity*> getEntities() const;
+    std::vector<Entity*> getEntitiesByLayer(LayerType layer) const;
     unsigned int getEntityCount();
     void clearData();
 
