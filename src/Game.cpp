@@ -6,11 +6,13 @@
 #include "Components/TransformComponent.h"
 #include "Components/SpriteComponent.h"
 #include "Components/KeyboardControlComponent.h"
+#include "Map.h"
 
 EntityManager manager;
 AssetManager *Game::assetManager = new AssetManager(&manager);
 SDL_Renderer *Game::renderer;
 SDL_Event Game::event;
+Map *map;
 
 Game::Game()
 {
@@ -64,9 +66,14 @@ void Game::loadLevel(int levelNumber)
 {
     // load assetsmanager
     std::string imageFilePath = "./assets/images/";
+    std::string tileFilePath = "./assets/tilemaps/";
     assetManager->addTexture("tank-image", (imageFilePath + "tank-big-right.png").c_str());
     assetManager->addTexture("chopper-image", (imageFilePath + "chopper-spritesheet.png").c_str());
     assetManager->addTexture("radar-image", (imageFilePath + "radar.png").c_str());
+    assetManager->addTexture("jungle-map", (tileFilePath + "jungle.png").c_str());
+
+    map = new Map("jungle-map", 2, 32);
+    map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
 
     // add entities and components
     Entity &chopperEntity(manager.addEntity("chopper"));
