@@ -75,6 +75,7 @@ void Game::loadLevel(int levelNumber)
     assetManager->addTexture("chopper-image", (imageFilePath + "chopper-spritesheet.png").c_str());
     assetManager->addTexture("radar-image", (imageFilePath + "radar.png").c_str());
     assetManager->addTexture("hitbox-image", (imageFilePath + "collision-texture.png").c_str());
+    assetManager->addTexture("heliport-image", (imageFilePath + "heliport.png").c_str());
     assetManager->addTexture("jungle-map", (tileFilePath + "jungle.png").c_str());
 
     map = new Map("jungle-map", 2, 32);
@@ -84,12 +85,17 @@ void Game::loadLevel(int levelNumber)
     chopperEntity.addComponent<TransformComponent>(400, 300, 0, -10, 32, 32, 1);
     chopperEntity.addComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
     chopperEntity.addComponent<KeyboardControlComponent>("up", "right", "down", "left");
-    chopperEntity.addComponent<ColliderComponent>("player", 400, 300, 32, 32);
+    chopperEntity.addComponent<ColliderComponent>("PLAYER", 400, 300, 32, 32);
 
     Entity &tankEntity(manager.addEntity("tank", ENEMY_LAYER));
     tankEntity.addComponent<TransformComponent>(350, 200, 10, 10, 32, 32, 1);
     tankEntity.addComponent<SpriteComponent>("tank-image");
-    tankEntity.addComponent<ColliderComponent>("enemy", 350, 200, 32, 32);
+    tankEntity.addComponent<ColliderComponent>("ENEMY", 350, 200, 32, 32);
+
+    Entity &heliportEntity(manager.addEntity("heliport", ENEMY_LAYER));
+    heliportEntity.addComponent<TransformComponent>(470, 420, 0, 0, 32, 32, 1);
+    heliportEntity.addComponent<SpriteComponent>("heliport-image");
+    heliportEntity.addComponent<ColliderComponent>("LEVEL_COMPLETE", 470, 420, 32, 32);
 
     Entity &radarEntity(manager.addEntity("radar", UI_LAYER));
     radarEntity.addComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
@@ -175,11 +181,30 @@ void Game::handleCameraMovement()
         camera.y = camera.h;
 }
 
+void Game::processGameOver()
+{
+    m_isRunning = false;
+}
+
+void Game::processNextLevel()
+{
+    std::cout << "next level!" << std::endl;
+    m_isRunning = false;
+}
+
 void Game::checkCollisions()
 {
-    std::string collisionTagType = manager.checkEntityCollisions(chopperEntity);
-    if (collisionTagType == "enemy")
+    CollisionType collisionTagType = manager.checkCollisions();
+    switch (collisionTagType)
     {
-        m_isRunning = false;
+    case PLAYER_ENEMY_COLLISION:
+        processGameOver();
+        break;
+    case PLAYER_LEVEL_COMPLETE_COLLISION:
+        processNextLevel();
+        break;
+
+    default:
+        break;
     }
 }

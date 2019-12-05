@@ -23,7 +23,7 @@ public:
     std::vector<Entity *> getEntitiesByLayer(LayerType layer) const;
     unsigned int getEntityCount();
     void clearData();
-    std::string checkEntityCollisions(Entity &entity) const;
+    CollisionType checkCollisions() const;
 
     void printEntities();
 };

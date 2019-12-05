@@ -31,6 +31,8 @@ public:
     void loadLevel(int levelNumber);
     void handleCameraMovement();
     void checkCollisions();
+    void processGameOver();
+    void processNextLevel();
 };
 
 #endif
