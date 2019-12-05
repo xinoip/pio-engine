@@ -19,6 +19,7 @@ public:
     static SDL_Renderer *renderer;
     static AssetManager *assetManager;
     static SDL_Event event;
+    static SDL_Rect camera;
     Game();
     ~Game();
     bool isRunning() const;
@@ -28,6 +29,7 @@ public:
     void render();
     void destroy();
     void loadLevel(int levelNumber);
+    void handleCameraMovement();
 };
 
 #endif

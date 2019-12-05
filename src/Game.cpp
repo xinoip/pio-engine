@@ -13,6 +13,7 @@ AssetManager *Game::assetManager = new AssetManager(&manager);
 SDL_Renderer *Game::renderer;
 SDL_Event Game::event;
 Map *map;
+SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
 Game::Game()
 {
@@ -62,6 +63,8 @@ void Game::initialize(unsigned int width, unsigned int height)
     return;
 }
 
+Entity &chopperEntity(manager.addEntity("chopper", PLAYER_LAYER));
+
 void Game::loadLevel(int levelNumber)
 {
     // load assetsmanager
@@ -72,11 +75,10 @@ void Game::loadLevel(int levelNumber)
     assetManager->addTexture("radar-image", (imageFilePath + "radar.png").c_str());
     assetManager->addTexture("jungle-map", (tileFilePath + "jungle.png").c_str());
 
-    map = new Map("jungle-map", 1, 32);
+    map = new Map("jungle-map", 2, 32);
     map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
 
     // add entities and components
-    Entity &chopperEntity(manager.addEntity("chopper", PLAYER_LAYER));
     chopperEntity.addComponent<TransformComponent>(350, 200, 0, -10, 32, 32, 1);
     chopperEntity.addComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
     chopperEntity.addComponent<KeyboardControlComponent>("up", "right", "down", "left");
@@ -86,7 +88,7 @@ void Game::loadLevel(int levelNumber)
     tankEntity.addComponent<SpriteComponent>("tank-image");
 
     Entity &radarEntity(manager.addEntity("radar", UI_LAYER));
-    radarEntity.addComponent<TransformComponent>(400, 300, 0, 0, 64, 64, 1);
+    radarEntity.addComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
     radarEntity.addComponent<SpriteComponent>("radar-image", 8, 160, false, true);
 
     manager.printEntities();
@@ -114,7 +116,6 @@ void Game::processInput()
 
 void Game::update()
 {
-
     while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TARGET_TIME))
         ;
 
@@ -125,6 +126,8 @@ void Game::update()
     ticksLastFrame = SDL_GetTicks();
 
     manager.update(deltaTime);
+
+    handleCameraMovement();
 }
 
 void Game::render()
@@ -147,4 +150,19 @@ void Game::destroy()
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+}
+
+void Game::handleCameraMovement()
+{
+    TransformComponent* playerTransform = chopperEntity.getComponent<TransformComponent>();
+    camera.x = playerTransform->position.x - (WINDOW_WIDTH / 2);
+    camera.y = playerTransform->position.y - (WINDOW_HEIGHT / 2);
+
+    // clamp
+    if(camera.x < 0) camera.x = 0;
+    if(camera.y < 0) camera.y = 0;
+    if(camera.x > camera.w) camera.x = camera.w;
+    if(camera.y > camera.h) camera.y = camera.h;
+
+    std::cout << camera.x << " , " << camera.y << std::endl;
 }

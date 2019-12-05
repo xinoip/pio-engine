@@ -100,12 +100,22 @@ public:
 
     void update(float deltaTime) override
     {
-        if(isAnimated) {
+        if (isAnimated)
+        {
             srcRectangle.x = srcRectangle.w * static_cast<int>((SDL_GetTicks() / animationSpeed) % numFrames);
         }
         srcRectangle.y = animationIndex * transform->height;
-        destRectangle.x = static_cast<int>(transform->position.x);
-        destRectangle.y = static_cast<int>(transform->position.y);
+
+        if (isFixed)
+        {
+            destRectangle.x = static_cast<int>(transform->position.x);
+            destRectangle.y = static_cast<int>(transform->position.y);
+        }
+        else
+        {
+            destRectangle.x = static_cast<int>(transform->position.x) - Game::camera.x;
+            destRectangle.y = static_cast<int>(transform->position.y) - Game::camera.y;
+        }
         destRectangle.w = transform->width * transform->scale;
         destRectangle.h = transform->height * transform->scale;
     }

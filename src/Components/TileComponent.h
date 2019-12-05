@@ -41,7 +41,8 @@ public:
 
     void update(float deltaTime) override
     {
-        // based on camera, update tile
+        destRect.x = position.x - Game::camera.x;
+        destRect.y = position.y - Game::camera.y;
     }
 
     void render() override
