@@ -8,6 +8,7 @@
 #include "Components/KeyboardControlComponent.h"
 #include "Components/ColliderComponent.h"
 #include "Components/TextLabelComponent.h"
+#include "Components/ProjectileEmitterComponent.h"
 #include "Map.h"
 
 EntityManager manager;
@@ -85,6 +86,7 @@ void Game::loadLevel(int levelNumber)
     assetManager->addTexture("hitbox-image", (imageFilePath + "collision-texture.png").c_str());
     assetManager->addTexture("heliport-image", (imageFilePath + "heliport.png").c_str());
     assetManager->addTexture("army-image", (imageFilePath + "army-group-1.png").c_str());
+    assetManager->addTexture("projectile-image", (imageFilePath + "bullet-enemy.png").c_str());
     assetManager->addTexture("jungle-map", (tileFilePath + "jungle.png").c_str());
     assetManager->addFont("charriot-font", (fontFilePath + "charriot.ttf").c_str(), 14);
 
@@ -96,6 +98,12 @@ void Game::loadLevel(int levelNumber)
     chopperEntity.addComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
     chopperEntity.addComponent<KeyboardControlComponent>("up", "right", "down", "left");
     chopperEntity.addComponent<ColliderComponent>("PLAYER", 400, 300, 32, 32);
+
+    Entity& projectile(manager.addEntity("projectile", PROJECTILE_LAYER));
+    projectile.addComponent<TransformComponent>(350 + 16, 200 + 16, 0, 0, 4, 4, 1);
+    projectile.addComponent<SpriteComponent>("projectile-image");
+    projectile.addComponent<ColliderComponent>("PROJECTILE", 350 +16, 200+16, 4, 4);
+    projectile.addComponent<ProjectileEmitterComponent>(50, 270, 200, true);
 
     Entity &tankEntity(manager.addEntity("tank", ENEMY_LAYER));
     tankEntity.addComponent<TransformComponent>(350, 200, 10, 10, 32, 32, 1);
@@ -220,6 +228,9 @@ void Game::checkCollisions()
         break;
     case PLAYER_LEVEL_COMPLETE_COLLISION:
         processNextLevel();
+        break;
+    case PLAYER_PROJECTILE_COLLISION:
+        processGameOver();
         break;
 
     default:

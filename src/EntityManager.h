@@ -26,6 +26,7 @@ public:
     CollisionType checkCollisions() const;
 
     void printEntities();
+    void destroyInactiveEntities();
 };
 
 #endif
