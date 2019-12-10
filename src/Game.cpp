@@ -7,6 +7,7 @@
 #include "Components/SpriteComponent.h"
 #include "Components/KeyboardControlComponent.h"
 #include "Components/ColliderComponent.h"
+#include "Components/TextLabelComponent.h"
 #include "Map.h"
 
 EntityManager manager;
@@ -35,6 +36,12 @@ void Game::initialize(unsigned int width, unsigned int height)
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         std::cerr << "SDL_init error." << std::endl;
+        return;
+    }
+
+    if (TTF_Init() != 0)
+    {
+        std::cerr << "TTF_init error." << std::endl;
         return;
     }
 
@@ -71,12 +78,15 @@ void Game::loadLevel(int levelNumber)
     // load assetsmanager
     std::string imageFilePath = "./assets/images/";
     std::string tileFilePath = "./assets/tilemaps/";
+    std::string fontFilePath = "./assets/fonts/";
     assetManager->addTexture("tank-image", (imageFilePath + "tank-big-right.png").c_str());
     assetManager->addTexture("chopper-image", (imageFilePath + "chopper-spritesheet.png").c_str());
     assetManager->addTexture("radar-image", (imageFilePath + "radar.png").c_str());
     assetManager->addTexture("hitbox-image", (imageFilePath + "collision-texture.png").c_str());
     assetManager->addTexture("heliport-image", (imageFilePath + "heliport.png").c_str());
+    assetManager->addTexture("army-image", (imageFilePath + "army-group-1.png").c_str());
     assetManager->addTexture("jungle-map", (tileFilePath + "jungle.png").c_str());
+    assetManager->addFont("charriot-font", (fontFilePath + "charriot.ttf").c_str(), 14);
 
     map = new Map("jungle-map", 2, 32);
     map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
@@ -100,6 +110,14 @@ void Game::loadLevel(int levelNumber)
     Entity &radarEntity(manager.addEntity("radar", UI_LAYER));
     radarEntity.addComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
     radarEntity.addComponent<SpriteComponent>("radar-image", 8, 160, false, true);
+
+    Entity &armyEntity(manager.addEntity("army", ENEMY_LAYER));
+    armyEntity.addComponent<TransformComponent>(300, 200, 10, 10, 32, 32, 1);
+    armyEntity.addComponent<SpriteComponent>("army-image");
+    armyEntity.addComponent<ColliderComponent>("ENEMY", 300, 200, 32, 32);
+
+    Entity &labelLevelName(manager.addEntity("LabelLevelName", UI_LAYER));
+    labelLevelName.addComponent<TextLabelComponent>(10, 10, "First level...", "charriot-font", WHITE_COLOR);
 
     manager.printEntities();
 }

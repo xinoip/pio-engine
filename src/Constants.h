@@ -1,6 +1,8 @@
 #ifndef _Constants_h_
 #define _Constants_h_
 
+#include <SDL2/SDL.h>
+
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 600;
 
@@ -28,5 +30,8 @@ enum LayerType {
 const unsigned int NUM_LAYERS = 6;
 
 const bool SHOW_HITBOX = true;
+
+const SDL_Color WHITE_COLOR = {255, 255, 255, 255};
+const SDL_Color GREEN_COLOR = {0, 255, 0, 255};
 
 #endif
