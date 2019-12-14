@@ -1,20 +1,19 @@
-#include "Constants.h"
-#include "Game.h"
+#include <iostream>
+#include "./Constants.h"
+#include "./Game.h"
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char *args[]) {
     Game *game = new Game();
 
-    game->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    game->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    while (game->isRunning())
-    {
-        game->processInput();
-        game->update();
-        game->render();
+    while (game->IsRunning()) {
+        game->ProcessInput();
+        game->Update();
+        game->Render();
     }
 
-    game->destroy();
+    game->Destroy();
 
     return 0;
 }

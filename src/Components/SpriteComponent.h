@@ -1,134 +1,103 @@
-#ifndef _Sprite_Component_h_
-#define _Sprite_Component_h_
+#ifndef SPRITECOMPONENT_H
+#define SPRITECOMPONENT_H
 
 #include <SDL2/SDL.h>
-#include <string>
-#include <map>
-#include "../Animation.h"
-#include "../Component.h"
 #include "../TextureManager.h"
 #include "../AssetManager.h"
+#include "../Animation.h"
 
-class SpriteComponent : public Component
-{
-private:
-    TransformComponent *transform;
-    SDL_Texture *texture;
-    SDL_Rect srcRectangle;
-    SDL_Rect destRectangle;
-    bool isAnimated;
-    unsigned int numFrames;
-    int animationSpeed;
-    bool isFixed;
-    std::map<std::string, Animation> animations;
-    std::string currentAnimationName;
-    unsigned int animationIndex = 0;
+class SpriteComponent: public Component {
+    private:
+        TransformComponent* transform;
+        SDL_Texture* texture;
+        SDL_Rect sourceRectangle;
+        SDL_Rect destinationRectangle;
+        bool isAnimated;
+        int numFrames;
+        int animationSpeed;
+        bool isFixed;
+        std::map<std::string, Animation> animations;
+        std::string currentAnimationName;
+        unsigned int animationIndex = 0;
 
-public:
-    SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
+    public:
+        SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
-    SpriteComponent(const char *filePath, unsigned int numFrames, int animationSpeed, bool hasDirections, bool isFixed)
-    {
-        this->isAnimated = true;
-        this->numFrames = numFrames;
-        this->animationSpeed = animationSpeed;
-        this->isFixed = isFixed;
-
-        if (hasDirections)
-        {
-            Animation downAnimation = Animation(0, numFrames, animationSpeed);
-            Animation rightAnimation = Animation(1, numFrames, animationSpeed);
-            Animation leftAnimation = Animation(2, numFrames, animationSpeed);
-            Animation upAnimation = Animation(3, numFrames, animationSpeed);
-            animations.emplace("DownAnimation", downAnimation);
-            animations.emplace("RightAnimation", rightAnimation);
-            animations.emplace("LeftAnimation", leftAnimation);
-            animations.emplace("UpAnimation", upAnimation);
-
-            this->animationIndex = 0;
-            this->currentAnimationName = "DownAnimation";
-        }
-        else
-        {
-            Animation singleAnimation = Animation(0, numFrames, animationSpeed);
-            animations.emplace("SingleAnimation", singleAnimation);
-            this->animationIndex = 0;
-            this->currentAnimationName = "SingleAnimation";
+        SpriteComponent(std::string assetTextureId) {
+            this->isAnimated = false;
+            this->isFixed = false;
+            SetTexture(assetTextureId);
         }
 
-        play(this->currentAnimationName);
-        setTexture(filePath);
-    }
-
-    void play(std::string animationName)
-    {
-        numFrames = animations[animationName].numFrames;
-        animationIndex = animations[animationName].index;
-        animationSpeed = animations[animationName].animationSpeed;
-        currentAnimationName = animationName;
-    }
-
-    SpriteComponent(const char *filePath)
-    {
-        isAnimated = false;
-        isFixed = false;
-        setTexture(filePath);
-    }
-
-    void setTexture(std::string assetTextureId)
-    {
-        texture = Game::assetManager->getTexture(assetTextureId);
-        if (texture == nullptr)
-        {
-            std::cout << "SpriteComponent does not have texture!\n";
+        SpriteComponent(std::string assetTextureId, bool isFixed) {
+            this->isAnimated = false;
+            this->isFixed = isFixed;
+            SetTexture(assetTextureId);
         }
-    }
 
-    void initialize() override
-    {
-        transform = owner->getComponent<TransformComponent>();
-        if (transform == nullptr)
-        {
-            std::cout << "SpriteComponent does not have TranformComponent!\n";
-            exit(EXIT_FAILURE);
+        SpriteComponent(std::string id, int numFrames, int animationSpeed, bool hasDirections, bool isFixed) {
+            this->isAnimated = true;
+            this->numFrames = numFrames;
+            this->animationSpeed = animationSpeed;
+            this->isFixed = isFixed;
+
+            if (hasDirections) {
+                Animation downAnimation = Animation(0, numFrames, animationSpeed);
+                Animation rightAnimation = Animation(1, numFrames, animationSpeed);
+                Animation leftAnimation = Animation(2, numFrames, animationSpeed);
+                Animation upAnimation = Animation(3, numFrames, animationSpeed);
+                animations.emplace("DownAnimation", downAnimation);
+                animations.emplace("RightAnimation", rightAnimation);
+                animations.emplace("LeftAnimation", leftAnimation);
+                animations.emplace("UpAnimation", upAnimation);
+                this->animationIndex = 0;
+                this->currentAnimationName = "DownAnimation";
+            } else {
+                Animation singleAnimation = Animation(0, numFrames, animationSpeed);
+                animations.emplace("SingleAnimation", singleAnimation);
+                this->animationIndex = 0;
+                this->currentAnimationName = "SingleAnimation";
+            }
+
+            Play(this->currentAnimationName);
+
+            SetTexture(id);
         }
-        srcRectangle.x = 0;
-        srcRectangle.y = 0;
-        srcRectangle.w = transform->width;
-        srcRectangle.h = transform->height;
-    }
 
-    void update(float deltaTime) override
-    {
-        if (isAnimated)
-        {
-            srcRectangle.x = srcRectangle.w * static_cast<int>((SDL_GetTicks() / animationSpeed) % numFrames);
+        void Play(std::string animationName) {
+            numFrames = animations[animationName].numFrames;
+            animationIndex = animations[animationName].index;
+            animationSpeed = animations[animationName].animationSpeed;
+            currentAnimationName = animationName;
         }
-        srcRectangle.y = animationIndex * transform->height;
 
-        if (isFixed)
-        {
-            destRectangle.x = static_cast<int>(transform->position.x);
-            destRectangle.y = static_cast<int>(transform->position.y);
+        void SetTexture(std::string assetTextureId) {
+            texture = Game::assetManager->GetTexture(assetTextureId);
         }
-        else
-        {
-            destRectangle.x = static_cast<int>(transform->position.x) - Game::camera.x;
-            destRectangle.y = static_cast<int>(transform->position.y) - Game::camera.y;
+
+        void Initialize() override {
+            transform = owner->GetComponent<TransformComponent>();
+            sourceRectangle.x = 0;
+            sourceRectangle.y = 0;
+            sourceRectangle.w = transform->width;
+            sourceRectangle.h = transform->height;
         }
-        destRectangle.w = transform->width * transform->scale;
-        destRectangle.h = transform->height * transform->scale;
-    }
 
-    void render() override
-    {
-        TextureManager::draw(texture, srcRectangle, destRectangle, spriteFlip);
-    }
+        void Update(float deltaTime) override {
+            if (isAnimated) {
+                sourceRectangle.x = sourceRectangle.w * static_cast<int>((SDL_GetTicks() / animationSpeed) % numFrames);
+            }
+            sourceRectangle.y = animationIndex * transform->height;
 
-    void print() override
-    {
-        std::cout << "\tComponent<SpriteComponent>" << std::endl;
-    }
+            destinationRectangle.x = static_cast<int>(transform->position.x) - (isFixed ? 0 : Game::camera.x);
+            destinationRectangle.y = static_cast<int>(transform->position.y) - (isFixed ? 0 : Game::camera.y);
+            destinationRectangle.w = transform->width * transform->scale;
+            destinationRectangle.h = transform->height * transform->scale;
+        }
+
+        void Render() override {
+            TextureManager::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
+        }
 };
 
 #endif

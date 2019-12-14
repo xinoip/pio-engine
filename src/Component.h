@@ -1,19 +1,15 @@
-#ifndef _Component_h_
-#define _Component_h_
-
-#include "Entity.h"
+#ifndef COMPONENT_H
+#define COMPONENT_H
 
 class Entity;
 
-class Component
-{
-public:
-    Entity *owner;
-    virtual ~Component() {}
-    virtual void initialize() {}
-    virtual void update(float deltaTime) {}
-    virtual void render() {}
-    virtual void print() {}
+class Component {
+    public:
+        Entity* owner;
+        virtual ~Component() {}
+        virtual void Initialize() {}
+        virtual void Update(float deltaTime) {}
+        virtual void Render() {}
 };
 
 #endif

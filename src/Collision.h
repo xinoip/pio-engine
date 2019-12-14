@@ -1,12 +1,11 @@
-#ifndef _Collision_h_
-#define _Collision_h_
+#ifndef COLLISION_H
+#define COLLISION_H
 
 #include <SDL2/SDL.h>
 
-class Collision
-{
-public:
-    static bool checkRectCollision(const SDL_Rect &rectA, const SDL_Rect &rectB);
+class Collision {
+    public:
+        static bool CheckRectangleCollision(const SDL_Rect& rectangleA, const SDL_Rect& rectangleB);
 };
 
 #endif

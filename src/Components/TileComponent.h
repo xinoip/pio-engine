@@ -1,59 +1,47 @@
-#ifndef _Tile_Component_h_
-#define _Tile_Component_h_
+#ifndef TILECOMPONENT_H
+#define TILECOMPONENT_H
 
 #include <SDL2/SDL.h>
-#include <iostream>
-#include "../../lib/glm/glm.hpp"
-#include "../TextureManager.h"
 #include "../EntityManager.h"
-#include "../Component.h"
+#include "../AssetManager.h"
+#include "../../lib/glm/glm.hpp"
 
-class TileComponent : public Component
-{
-public:
-    SDL_Texture *texture;
-    SDL_Rect srcRect;
-    SDL_Rect destRect;
-    glm::vec2 position;
+class TileComponent: public Component {
+    public:
+        SDL_Texture *texture;
+        SDL_Rect sourceRectangle;
+        SDL_Rect destinationRectangle;
+        glm::vec2 position;
 
-    TileComponent(int srcRectX, int srcRectY, int x, int y, int tileSize, int tileScale, std::string textureId)
-    {
-        texture = Game::assetManager->getTexture(textureId);
+        TileComponent(int sourceRectX, int sourceRectY, int x, int y, int tileSize, int tileScale, std::string assetTextureId) {
+            texture = Game::assetManager->GetTexture(assetTextureId);
 
-        srcRect.x = srcRectX;
-        srcRect.y = srcRectY;
-        srcRect.w = tileSize;
-        srcRect.h = tileSize;
+            sourceRectangle.x = sourceRectX;
+            sourceRectangle.y = sourceRectY;
+            sourceRectangle.w = tileSize;
+            sourceRectangle.h = tileSize;
 
-        destRect.x = x;
-        destRect.y = y;
-        destRect.w = tileSize * tileScale;
-        destRect.h = tileSize * tileScale;
+            destinationRectangle.x = x;
+            destinationRectangle.y = y;
+            destinationRectangle.w = tileSize * tileScale;
+            destinationRectangle.h = tileSize * tileScale;
 
-        position.x = x;
-        position.y = y;
-    }
+            position.x = x;
+            position.y = y;
+        }
 
-    ~TileComponent()
-    {
-        SDL_DestroyTexture(texture);
-    }
+        ~TileComponent() {
+            SDL_DestroyTexture(texture);
+        }
 
-    void update(float deltaTime) override
-    {
-        destRect.x = position.x - Game::camera.x;
-        destRect.y = position.y - Game::camera.y;
-    }
+        void Update(float deltaTime) override {
+            destinationRectangle.x = position.x - Game::camera.x;
+            destinationRectangle.y = position.y - Game::camera.y;
+        }
 
-    void render() override
-    {
-        TextureManager::draw(texture, srcRect, destRect, SDL_FLIP_NONE);
-    }
-
-    void print() override
-    {
-        // std::cout << "\tComponent<TileComponent>" << std::endl;
-    }
+        void Render() override {
+            TextureManager::Draw(texture, sourceRectangle, destinationRectangle, SDL_FLIP_NONE);
+        }
 };
 
 #endif

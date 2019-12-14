@@ -1,61 +1,40 @@
-#ifndef _Collider_Component_h_
-#define _Collider_Component_h_
+#ifndef COLLIDERCOMPONENT_H
+#define COLLIDERCOMPONENT_H
 
-#include <iostream>
-#include <string>
+#include <SDL2/SDL.h>
 #include "../Game.h"
-#include "../Component.h"
-#include "../Constants.h"
-#include "TransformComponent.h"
-#include "SpriteComponent.h"
+#include "../EntityManager.h"
+#include "../Components/TransformComponent.h"
 
-class ColliderComponent : public Component
-{
-public:
-    std::string colliderTag;
-    SDL_Rect collider;
-    SDL_Rect srcRect;
-    SDL_Rect destRect;
-    TransformComponent *transform;
+class ColliderComponent: public Component {
+    public:
+        std::string colliderTag;
+        SDL_Rect collider;
+        SDL_Rect sourceRectangle;
+        SDL_Rect destinationRectangle;
+        TransformComponent* transform;
 
-    ColliderComponent(std::string colliderTag, int x, int y, int width, int height)
-    {
-        this->colliderTag = colliderTag;
-        collider = {x, y, width, height};
-    }
+        ColliderComponent(std::string colliderTag, int x, int y, int width, int height) {
+            this->colliderTag = colliderTag;
+            this->collider = {x, y, width, height};
+        }
 
-    void initialize() override
-    {
-        if (owner->hasComponent<TransformComponent>())
-        {
-            transform = owner->getComponent<TransformComponent>();
-            srcRect = {0, 0, transform->width, transform->height};
-            destRect = {collider.x, collider.y, collider.w, collider.h};
-            if (SHOW_HITBOX)
-            {
-                this->owner->addComponent<SpriteComponent>("hitbox-image");
+        void Initialize() override {
+            if (owner->HasComponent<TransformComponent>()) {
+                transform = owner->GetComponent<TransformComponent>();
+                sourceRectangle = {0, 0, transform->width, transform->height};
+                destinationRectangle = {collider.x, collider.y, collider.w, collider.h};
             }
         }
-        else
-        {
-            std::cout << "No transformComp found in collider!" << std::endl;
+
+        void Update(float deltaTime) override {
+            collider.x = static_cast<int>(transform->position.x); 
+            collider.y = static_cast<int>(transform->position.y);
+            collider.w = transform->width * transform->scale;
+            collider.h = transform->height * transform->scale;
+            destinationRectangle.x = collider.x - Game::camera.x;
+            destinationRectangle.y = collider.y - Game::camera.y;
         }
-    }
-
-    void update(float deltaTime) override
-    {
-        collider.x = static_cast<int>(transform->position.x);
-        collider.y = static_cast<int>(transform->position.y);
-        collider.w = static_cast<int>(transform->width * transform->scale);
-        collider.h = static_cast<int>(transform->height * transform->scale);
-        destRect.x = collider.x - Game::camera.x;
-        destRect.y = collider.y - Game::camera.y;
-    }
-
-    void print() override
-    {
-        std::cout << "\tComponent<ColliderComponent>" << std::endl;
-    }
 };
 
 #endif

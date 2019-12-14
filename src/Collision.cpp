@@ -1,10 +1,10 @@
-#include "Collision.h"
+#include "./Collision.h"
 
-bool Collision::checkRectCollision(const SDL_Rect &rectA, const SDL_Rect &rectB)
-{
+bool Collision::CheckRectangleCollision(const SDL_Rect& rectangleA, const SDL_Rect& rectangleB) {
     return (
-        rectA.x + rectA.w >= rectB.x &&
-        rectB.x + rectB.w >= rectA.x &&
-        rectA.y + rectA.h >= rectB.y &&
-        rectB.y + rectB.h >= rectA.y);
+        rectangleA.x + rectangleA.w >= rectangleB.x &&
+        rectangleB.x + rectangleB.w >= rectangleA.x &&
+        rectangleA.y + rectangleA.h >= rectangleB.y &&
+        rectangleB.y + rectangleB.h >= rectangleA.y
+    );
 }

@@ -1,31 +1,29 @@
-#include "AssetManager.h"
+#include "./AssetManager.h"
+#include "./Components/TransformComponent.h"
 
-AssetManager::AssetManager(EntityManager *manager) : manager(manager) {}
+AssetManager::AssetManager(EntityManager* manager): manager(manager) {
 
-AssetManager::~AssetManager() {}
+}
 
-void AssetManager::clearData()
-{
+void AssetManager::ClearData() {
+    for (auto const& [textureId, texture]: textures)
+        SDL_DestroyTexture(texture);
     textures.clear();
     fonts.clear();
 }
 
-void AssetManager::addTexture(std::string textureId, const char *filePath)
-{
-    textures.emplace(textureId, TextureManager::loadTexture(filePath));
+void AssetManager::AddTexture(std::string textureId, const char* filePath) {
+    textures.emplace(textureId, TextureManager::LoadTexture(filePath));
 }
 
-SDL_Texture *AssetManager::getTexture(std::string textureId)
-{
+void AssetManager::AddFont(std::string fontId, const char* filePath, int fontSize) {
+    fonts.emplace(fontId, FontManager::LoadFont(filePath, fontSize));
+}
+
+SDL_Texture* AssetManager::GetTexture(std::string textureId) {
     return textures[textureId];
 }
 
-void AssetManager::addFont(std::string fontId, const char *filePath, int fontSize)
-{
-    fonts.emplace(fontId, FontManager::loadFont(filePath, fontSize));
-}
-
-TTF_Font *AssetManager::getFont(std::string fontId)
-{
+TTF_Font* AssetManager::GetFont(std::string fontId) {
     return fonts[fontId];
 }
